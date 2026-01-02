@@ -1,0 +1,19 @@
+/* Toast position styles */
+.toast {
+    position: fixed;
+    z-index: 1050; /* Ensure it's on top */
+    animation: fadeOut 1s forwards;
+    animation-delay: 4s; /* Display for 4 seconds before fading out */
+}
+
+.position-left-top { top: 1em; left: 1em; }
+.position-center-top { top: 1em; left: 50%; transform: translateX(-50%); }
+.position-right-top { top: 1em; right: 1em; }
+
+.position-left-middle { top: 50%; left: 1em; transform: translateY(-50%); }
+.position-center-middle { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.position-right-middle { top: 50%; right: 1em; transform: translateY(-50%); }
+
+.position-left-bottom { bottom: 1em; left: 1em; }
+.position-center-bottom { bottom: 1em; left: 50%; transform: translateX(-50%); }
+.position-right-bottom { bottom: 1em; right: 1em; }

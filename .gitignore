@@ -1,0 +1,84 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+.ipynb_checkpoints/
+
+# Python virtual environment / Conda
+llm-server/bin/
+llm-server/lib/
+llm-server/include/
+llm-server/conda-meta/
+llm-server/share/
+llm-server/ssl/
+llm-server/man/
+llm-server/duckdb_build/
+llm-server/cache/
+
+# Temp files
+temp/
+
+# Image datasets and large files
+llm-server/llm_server/image/nature_photos/
+llm-server/llm_server/image/nature_photos_small/
+llm-server/llm_server/image/vector_database*/
+llm-server/llm_server/image/*.mlpackage/
+llm-server/llm_server/chroma/
+llm-server/llm_server/output/
+*.whl
+*.bin
+*.gguf
+*.safetensors
+*.pt
+*.pth
+*.onnx
+
+# Database files
+*.sqlite3
+
+# Model downloads
+llm-server/sbin/
+llm-server/etc/
+
+# Large CSV files
+llm-server/llm_server/doc_data/csv/car_prices.csv
+
+# Environment files (*.local is already covered above)
+.env
+.env.*
+!.env.example
+
+.claude

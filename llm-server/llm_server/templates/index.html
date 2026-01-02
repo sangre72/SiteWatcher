@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Query Interface</title>
+</head>
+<body>
+    <h1>Question Input</h1>
+    <form id="queryForm">
+        <input type="text" id="queryText" placeholder="Enter your question here...">
+        <button type="submit">Ask</button>
+
+        <div id="response" style="width:800px; height:600px"></div>
+    </form>
+
+    <script>
+        document.getElementById('queryForm').onsubmit = function(event) {
+            event.preventDefault();
+            const queryText = document.getElementById('queryText').value;
+
+            fetch('http://localhost:9999/api/gmn-message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ q: queryText })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').textContent = data; // Set response text content
+
+                console.log('Response:', data);
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    </script>
+</body>
+</html>

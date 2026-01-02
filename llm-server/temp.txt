@@ -1,0 +1,12 @@
+$query = "select n.node_id, n.node_name from gc_node as n \n";
+$query += "    left join gc_resource_group_node as rgn on n.node_id = rgn.node_id \n";
+$query += "    left join gc_company_resource_group as crg on rgn.rg_id = crg.rg_id \n";
+$query += "    #left join gc_company as c on c.company_id = crg.company_id \n";
+$query += "    where 1 \n";
+$query += "    and n.is_user_req!='1' \n";
+$query += "    and crg.company_id=:company_id \n";
+$query += "    #AND n.os_type_code=:os_type_code # if (!$GL_WIN_USE) 일 경우 조건 추가 \n";
+$query += "    order by n.node_name \n";
+$query += "
+$query += "    $db->bindParam(':company_id', $company_id, PDO::PARAM_INT);
+$query += "    $db->bindParam(':os_type_code', OS_TYPE_LINUX, PDO::PARAM_STR); // if (!$GL_WIN_USE) 일 경우

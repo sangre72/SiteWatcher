@@ -1,0 +1,9 @@
+@keyframes blink {
+    50% {
+        background-color: yellow;
+    }
+}
+
+.blinking {
+    animation: blink 0.5s ease-in-out;
+}

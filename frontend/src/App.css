@@ -1,0 +1,112 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* App.css */
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'header header header'
+    'nav_left . content'; /* nav_left 영역, 공백, 그리고 content 영역으로 구분 */
+  grid-template-columns: auto 10px 1fr; /* 좌측 메뉴 너비 250px, 공백을 auto로 설정하여 자동 조정, 나머지 공간을 콘텐츠 영역에 할당 */
+  grid-template-rows: auto 1fr; /* 상단 바의 높이를 86px로 수정, 나머지 공간을 내비게이션과 콘텐츠 영역에 할당 */
+  height: 100vh; /* 전체 뷰포트 높이 */
+}
+
+.header {
+  grid-area: header; /* 헤더 영역 */
+}
+
+.nav_left {
+  grid-area: nav_left; /* 좌측 내비게이션 영역 */
+}
+
+.content {
+  grid-area: content; /* 콘텐츠 영역 */
+}
+
+/* App.css */
+
+.taps {
+  margin-top: 10px;
+}
+
+.content-body-with-margin {
+  margin-top: 10px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'header header header'
+    'nav content content';
+  grid-template-columns: 250px 1fr; /* 네비게이션은 300px 고정 너비, 콘텐츠는 나머지 공간 차지 */
+  grid-template-rows: auto 1fr; /* 헤더는 내용에 따라 높이 조절, 콘텐츠는 남은 높이 모두 차지 */
+  height: 100vh; /* 전체 뷰포트 높이 */
+  min-width: 600px; /* 최소 너비 설정 */
+}
+
+.header {
+  grid-area: header;
+}
+
+.nav {
+  grid-area: nav;
+}
+
+.content {
+  grid-area: content;
+}
+
+@media only screen and (max-width: 768px) {
+  .grid-container {
+    grid-template-areas:
+      'header'
+      'content';
+    grid-template-columns: 1fr; /* 모든 영역이 전체 너비를 차지 */
+    grid-template-rows: auto 1fr; /* 헤더와 콘텐츠만 표시 */
+  }
+
+  .nav {
+    display: none; /* 모바일 환경에서는 네비게이션 영역을 숨김 */
+  }
+}
+
+@keyframes blink {
+  0% {
+    background-color: #dc3545; /* Bootstrap danger color */
+    border-color: #dc3545;
+  }
+  50% {
+    background-color: orange; /* Lighter shade of danger color */
+    border-color: orange;
+  }
+  100% {
+    background-color: #dc3545; /* Bootstrap danger color */
+    border-color: #dc3545;
+  }
+}
+
+.btn-danger.blink {
+  animation: blink 1s infinite;
+}

@@ -1,0 +1,17 @@
+백터 데이터베이스에서 egov.lettnmenuinfo 테이블의 데이터만 모두다 보여줘
+
+백터 데이터베이스에서 egov.lettccmmndetailcode 테이블의  데이터를 검색해서, json 형태로 데이터 25개만 tb_jsonl table에 jsonl컬럼에 입력 해줘
+
+백터 데이터베이스에서 egov.lettccmmndetailcode 테이블의 데이터를 검색해서 파일에 써줘
+
+백터 데이터베이스에서 egov.lettccmmndetailcode 테이블의  데이터를 검색해서 검색 결과를 알려줘
+
+백터 데이터베이스에서 egov.lettccmmndetailcode 테이블의  데이터를 검색해서 검색 결과를 알려줘
+
+
+비용이 너무 과도하게 발생한다. gpt-4 의 경우 회당. 600 원의 비용 발생
+
+llama 나 아니면 다른 llm 을 사용해 보는게 좋겠다.Write the data to the note file
+
+Data from the egov.lettccmmndetailcode table
+전자정부 프레임워크 문서

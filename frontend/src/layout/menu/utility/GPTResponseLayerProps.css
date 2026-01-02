@@ -1,0 +1,15 @@
+.response-layer {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    background: #f8f9fa;
+    overflow-y: scroll;
+    padding: 20px;
+    border-left: 1px solid #ccc;
+}
+
+.response-content {
+    margin-bottom: 20px;
+}

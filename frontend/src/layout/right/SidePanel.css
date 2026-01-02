@@ -1,0 +1,33 @@
+.custom-btn {
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.side-panel {
+    width: 650px;
+    height: 100%;
+}
+
+.button {
+    animation: buttonAnimation 1s linear infinite;
+}
+
+.layer {
+    animation: buttonAnimation 1s linear infinite;
+}
+
+@keyframes buttonAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

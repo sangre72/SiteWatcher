@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Analyzer</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* 기존 스타일 유지 */
+        .pdf-content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+        }
+        .pdf-content .line {
+            display: flex;
+        }
+        .pdf-content .line-number {
+            display: inline-block;
+            width: 4em;
+            padding-right: 1em;
+            margin-right: 0.5em;
+            text-align: right;
+            color: #888;
+            border-right: 1px solid #ddd;
+        }
+        .error {
+            color: red;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .llm-analysis {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        /* 새로운 스타일 추가 */
+        #loadingIndicator {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Analyzer</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".pdf">
+        <button type="submit">Upload and Analyze</button>
+    </form>
+    <div id="pageNavigation" style="display: none;">
+        <button id="prevPage">Previous Page</button>
+        <span id="pageInfo"></span>
+        <button id="nextPage">Next Page</button>
+    </div>
+    <div id="loadingIndicator">Analyzing... Please wait.</div>
+    <div id="result">
+        <div id="content"></div>
+        <div id="tables"></div>
+    </div>
+    <script>
+    $(document).ready(function() {
+        let currentPage = 0;
+        let totalPages = 0;
+        let currentFilename = '';
+
+        $('#uploadForm').on('submit', function(e) {
+            e.preventDefault();
+            var fileInput = $('input[type="file"]')[0];
+            var file = fileInput.files[0];
+
+            if (file.size > 100 * 1024 * 1024) {
+                alert('File size exceeds 100MB. Please choose a smaller file.');
+                return;
+            }
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '/upload',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.success) {
+                        currentPage = 0;
+                        totalPages = data.total_pages;
+                        currentFilename = data.filename;
+                        $('#pageNavigation').show();
+                        updatePageInfo();
+                        //loadPage(0);
+                    } else {
+                        $('#content').html('<p class="error">Error: ' + data.error + '</p>');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#content').html('<p class="error">Error: ' + textStatus + '</p>');
+                }
+            });
+        });
+
+        function loadPage(pageNum) {
+            $('#loadingIndicator').show();
+            $('#content').empty();
+            $('#tables').empty();
+
+            $.ajax({
+                url: '/analyze_page',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({filename: currentFilename, page_num: pageNum}),
+                success: function (data) {
+                    if (data.success) {
+                        pollTaskStatus(data.task_id);
+                    } else {
+                        $('#loadingIndicator').hide();
+                        $('#content').html('<p class="error">Error: ' + data.error + '</p>');
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#loadingIndicator').hide();
+                    $('#content').html('<p class="error">Error: ' + textStatus + '</p>');
+                }
+            });
+        }
+
+        function pollTaskStatus(taskId) {
+            $.ajax({
+                url: '/task_status/' + taskId,
+                type: 'GET',
+                success: function (data) {
+                    if (data.status === 'completed') {
+                        $('#loadingIndicator').hide();
+                        displayPage(data.result);
+                    } else if (data.status === 'error') {
+                        $('#loadingIndicator').hide();
+                        $('#content').html('<p class="error">Error: ' + data.error + '</p>');
+                    } else {
+                        // 아직 실행 중이면 2초 후 다시 확인
+                        setTimeout(function() { pollTaskStatus(taskId); }, 2000);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $('#loadingIndicator').hide();
+                    $('#content').html('<p class="error">Error checking task status: ' + textStatus + '</p>');
+                }
+            });
+        }
+
+        function displayPage(result) {
+            $('#content').html('<h3>Page ' + (result.page_num + 1) + '</h3><div class="pdf-content">' + result.PyPDF2.content + '</div>');
+
+            // LLM 분석 결과 표시
+            if (result.LLM_Analysis) {
+                $('#content').append('<h3>LLM Analysis</h3><div class="llm-analysis">' + result.LLM_Analysis + '</div>');
+            }
+
+            let tablesHtml = '<h3>Tables</h3>';
+            if (result.PDFPlumber.tables.length > 0) {
+                result.PDFPlumber.tables.forEach(function(table, index) {
+                    tablesHtml += '<h4>Table ' + (index + 1) + '</h4>';
+                    tablesHtml += '<table>';
+                    table.data.forEach(function(row) {
+                        tablesHtml += '<tr>';
+                        row.forEach(function(cell) {
+                            tablesHtml += '<td>' + cell + '</td>';
+                        });
+                        tablesHtml += '</tr>';
+                    });
+                    tablesHtml += '</table>';
+                });
+            } else {
+                tablesHtml += '<p>No tables found on this page.</p>';
+            }
+            $('#tables').html(tablesHtml);
+        }
+
+        function updatePageInfo() {
+            $('#pageInfo').text('Page ' + (currentPage + 1) + ' of ' + totalPages);
+        }
+
+        $('#prevPage').click(function() {
+            if (currentPage > 0) {
+                currentPage--;
+                updatePageInfo();
+                loadPage(currentPage);
+            }
+        });
+
+        $('#nextPage').click(function() {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                updatePageInfo();
+                loadPage(currentPage);
+            }
+        });
+    });
+    </script>
+</body>
+</html>

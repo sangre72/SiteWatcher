@@ -1,0 +1,20 @@
+/* wave.css */
+@keyframes slideGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.flow-animation path {
+    stroke: url(#gradient); /* 그라디언트를 스트로크로 사용 */
+    animation: slideGradient 3s linear infinite; /* 애니메이션 적용 */
+    fill: none;
+}
+
+/* SVG 내에 정의할 선형 그라디언트 */
+.svg-gradient {
+    background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1)); /* 투명에서 완전 불투명으로 */
+}

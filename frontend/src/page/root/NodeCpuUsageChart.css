@@ -1,0 +1,9 @@
+.chart-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.chart-container div:last-child {
+    margin-right: 0;
+}

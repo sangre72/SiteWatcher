@@ -1,0 +1,21 @@
+SSH 접속에 사용하는 사용자 계정 확인 원격지에 사용할 계정이 생성되어있어야 함.
+
+master : ~/.ssh/id_rsa.pub
+    : ssh-keygen -t rsa -b 4096
+
+대상 host :  ~/.ssh/authorized_keys
+1. master에서:
+SSH 키 페어를 생성합니다 (ssh-keygen을 사용).
+생성된 공개 키 (~/.ssh/id_rsa.pub)를 복사합니다.
+2. 각 host에서:
+~/.ssh/authorized_keys 파일을 열고, master의 공개 키를 이 파일에 붙여넣습니다.
+이렇게 하면 master 서버의 개인 키를 가진 사용자가 해당 host에 접근할 수 있게 됩니다.
+
+SSH 키의 권한 설정 : 개인 키 파일 (~/.ssh/id_rsa)은 다른 사용자에게 읽기 권한이 없어야 합니다 (chmod 600 ~/.ssh/id_rsa).
+
+sudo vi /etc/ssh/sshd_config
+PubkeyAuthentication yes
+sudo systemctl restart sshd 또는 sudo service sshd restart
+
+SSH 설정 파일 확인: /etc/ssh/sshd_config 파일 설정을 확인하여, 키 기반 인증이 활성화되어 있고, 패스워드 기반 인증이 비활성화되었는지 확인합니다.
+서버의 호스트 키가 변경되지 않았는지 확인: 만약 서버의 IP 주소나 호스트 키가 변경되었다면, 이는 클라이언트의 known_hosts 파일에 문제 발생
